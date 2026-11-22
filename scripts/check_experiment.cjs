@@ -8,7 +8,7 @@ const source = readFileSync(path.join(__dirname, "../experiment.js"), "utf8");
 const form = name => "https://docs.google.com/forms/d/e/" + name + "/viewform";
 const endpoint = "https://script.google.com/macros/s/test/exec";
 const patch = (script, key, value) => script.replace(new RegExp(key + ': (?:true|false|"[^"]*")'), key + ": " + JSON.stringify(value));
-const inactive = patch(source, "enabled", false);
+const inactive = patch(patch(source, "enabled", false), "generalForm", "");
 const live = Object.entries({enabled: true, endpoint, terminalForm: form("t"), businessForm: form("b"), generalForm: form("g")})
   .reduce((script, [key, value]) => patch(script, key, value), inactive);
 const site = "https://example.invalid/meeting-lab/";
@@ -105,12 +105,50 @@ function load(relative, shared, options = {}) {
 const events = page => page.calls.map(record => record.body.event);
 const armKey = "meeting-lab-v1:arm";
 {
-  for (const js of [inactive, live.replace(form("b"), form("t")), live.replace(endpoint, "https://bad.invalid/exec"), live.replace(form("t"), form("t").replace("/viewform", "/edit"))]) {
+  for (const js of [inactive, patch(live.replace(form("b"), form("t")), "generalForm", ""), patch(live.replace(endpoint, "https://bad.invalid/exec"), "generalForm", ""), patch(live.replace(form("t"), form("t").replace("/viewform", "/edit")), "generalForm", "")]) {
     const storage = settings(), page = load("", storage, {js});
     assert.equal(storage.local.size, 0);
     assert.equal(page.redirected, undefined);
     assert.equal(page.markup.link, undefined);
     assert.deepEqual(events(page), []);
+  }
+}
+{
+  const generalOnly = patch(inactive, "generalForm", form("g"));
+  for (const js of [generalOnly, patch(live, "enabled", false), patch(live, "endpoint", ""), patch(live, "businessForm", "")]) {
+    for (const relative of ["?ref=producthunt&utm_source=campaign", "business.html"]) {
+      const storage = settings(), page = load(relative, storage, {js, random: 1});
+      assert.equal(page.markup.link.href, form("g"));
+      page.markup.link.follow();
+      page.switcher.follow();
+      page.advance(20000);
+      assert.deepEqual(events(page), []);
+      assert.equal(page.redirected, undefined);
+      assert.equal(storage.local.size + storage.session.size, 0);
+    }
+  }
+  const conflictingGeneral = patch(patch(live, "enabled", false), "generalForm", form("b"));
+  assert.equal(load("", settings(), {js: conflictingGeneral}).markup.link, undefined);
+}
+{
+  const campaign = "?ref=producthunt&utm_source=campaign";
+  for (const random of [0, 1]) {
+    const storage = settings(), start = load(campaign, storage, {random});
+    const shown = random ? load(start.redirected, storage) : start;
+    assert.equal(shown.url, site + (random ? "business.html" : ""));
+    assert.equal(shown.markup.link.href, form(random ? "b" : "t"));
+    assert.deepEqual(events(shown), ["impression"]);
+    assert.equal(JSON.stringify(shown.calls).includes("producthunt"), false);
+    assert.equal(JSON.stringify([...storage.session]).includes("campaign"), false);
+    const reload = load(shown.url, storage, {state: shown.context.history.state});
+    assert.equal(reload.markup.link.href, shown.markup.link.href);
+    assert.deepEqual(events(reload), []);
+    for (const direct of ["business.html?ref=producthunt", "index.html?view=terminal",
+      "?ref=producthunt&view=terminal", "?ref=producthunt#early-access"]) {
+      const page = load(direct, storage);
+      assert.equal(page.markup.link.href, form("g"));
+      assert.deepEqual(events(page), []);
+    }
   }
 }
 {
@@ -198,7 +236,9 @@ const armKey = "meeting-lab-v1:arm";
 {
   for (const [relative, options] of [
     ["business.html", {}], ["business.html?ab=business", {random: 1}],
-    ["index.html?view=terminal", {}], ["#early-access", {}], ["?utm_source=test", {}],
+    ["index.html?view=terminal", {}], ["#early-access", {}], ["?utm_not_standard=test", {}], ["?utm_source=ok&view=terminal", {}],
+    ["?ref=ok&debug=1", {}], ["?ref=ok&version=v2", {}], ["?ref=ok&ab=business", {}],
+    ["?utm_medium=organic#proof", {}],
     ["", {navigator: {globalPrivacyControl: true}, random: 1}],
     ["", {navigator: {doNotTrack: "1"}}], ["", {denied: "write"}], ["", {denied: "read"}],
   ]) {
@@ -211,4 +251,4 @@ const armKey = "meeting-lab-v1:arm";
     assert.deepEqual(events(page), []);
   }
 }
-console.log("PASS: inactive/invalid config, exact 50/50 byte split, sticky arm, one-time business handoff, direct/switch and preference exclusions, focused visible time, event deduplication and fixed analytics contract.");
+console.log("PASS: inactive general signup, allowlisted campaign entry, refresh and routing, invalid config, exact 50/50 byte split, sticky arm, one-time business handoff, direct/switch and preference exclusions, focused visible time, event deduplication and fixed analytics contract.");

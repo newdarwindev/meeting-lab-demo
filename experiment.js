@@ -18,8 +18,10 @@
   const eventNames = ["impression", "attention", "waitlist_click", "variant_switch"];
   const endpointURL = /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/;
   const formURL = /^https:\/\/(?:docs\.google\.com\/forms\/d\/(?:e\/)?[A-Za-z0-9_-]+\/viewform|forms\.gle\/[A-Za-z0-9]+)$/;
-  if (!config.enabled || !endpointURL.test(config.endpoint) || !formURL.test(config.terminalForm) ||
-      !formURL.test(config.businessForm) || config.terminalForm === config.businessForm) return;
+  const liveExperiment = config.enabled && endpointURL.test(config.endpoint) && formURL.test(config.terminalForm) &&
+    formURL.test(config.businessForm) && config.terminalForm !== config.businessForm;
+  const campaignKeys = new Set(["ref", "utm_source", "utm_medium", "utm_campaign", "utm_term",
+    "utm_content", "utm_id", "utm_source_platform", "utm_creative_format", "utm_marketing_tactic"]);
 
   const generalForm = formURL.test(config.generalForm) &&
     ![config.terminalForm, config.businessForm].includes(config.generalForm) ? config.generalForm : "";
@@ -52,10 +54,11 @@
     sessionStorage.setItem(sessionKey, JSON.stringify(value));
   }
 
-  if (!declined() && window.crypto && window.fetch) {
+  if (liveExperiment && !declined() && window.crypto && window.fetch) {
     try {
       const url = new URL(location.href);
-      const rootEntry = url.pathname.endsWith("/") && !url.search && !url.hash;
+      const campaignOnly = [...url.searchParams.keys()].every(key => campaignKeys.has(key));
+      const rootEntry = url.pathname.endsWith("/") && campaignOnly && !url.hash;
       const historyArm = history.state && history.state[stateKey];
       let selected = localStorage.getItem(armKey);
 
@@ -83,11 +86,17 @@
           enrolled = true;
         }
       } else if (selected === arm && ((rootEntry && arm === "terminal") ||
-                 (historyArm === arm && url.search === "" &&
+                 (historyArm === arm && !url.search && !url.hash &&
                    (isBusiness || url.pathname.endsWith("/"))))) {
         const session = readSession();
         writeSession(session);
-        if (historyArm !== arm) history.replaceState({ [stateKey]: arm }, "");
+        if (rootEntry && url.search) {
+          // Never carry campaign values into the randomized edition or refreshed URL.
+          url.search = "";
+          history.replaceState({ [stateKey]: arm }, "", url.href);
+        } else if (historyArm !== arm) {
+          history.replaceState({ [stateKey]: arm }, "");
+        }
         enrolled = true;
       }
     } catch {
