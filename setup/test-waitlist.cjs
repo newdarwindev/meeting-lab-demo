@@ -11,15 +11,26 @@ const properties = {
 };
 const lock = {tryLock: () => true, waitLock: () => {}, releaseLock: () => {}};
 const logs = [];
+let now = '2026-11-22T12:00:00.000Z';
+class MockDate extends Date {
+  constructor(...args) { super(...(args.length ? args : [now])); }
+}
 const context = vm.createContext({
+  Date: MockDate,
   PropertiesService: {getScriptProperties: () => properties},
   LockService: {getScriptLock: () => lock},
   ContentService: {createTextOutput: s => s},
   console: {log: v => logs.push(v)},
   FormApp: {openById: id => ({
+    isPublished: () => true,
+    isAcceptingResponses: () => true,
+    isPublishingSummary: () => false,
     getResponses: from => {
       assert.equal(from.toISOString(), '2026-11-22T00:00:00.000Z');
-      return ['a', 'b', 'g'].includes(id) ? [{email: 'do-not-log@example.invalid'}] : [];
+      return ['a', 'b', 'g'].includes(id) ? [
+        '2026-11-21T23:59:59.999Z', '2026-11-22T12:00:00.000Z',
+        '2026-11-22T12:00:00.001Z', '2026-11-22T20:00:00.000Z',
+      ].map(time => ({email: 'do-not-log@example.invalid', getTimestamp: () => new Date(time)})) : [];
     }
   })},
 });
@@ -46,12 +57,26 @@ for (const arm of ['terminal', 'business']) {
   }
 }
 context.pauseExperiment();
+assert.equal(values.has('cutoff'), false, 'Unarmed pause must not close future first start');
+values.set('start', '2026-11-22T00:00:00.000Z');
+values.set('open', 'yes');
+context.pauseExperiment();
+assert.equal(values.get('cutoff'), now);
 post(valid);
 assert.equal(values.get('count.terminal.impression'), '2');
-values.set('start', '2026-11-22T00:00:00.000Z');
+now = '2026-11-22T20:30:00.000Z';
+context.pauseExperiment();
+assert.equal(values.get('cutoff'), '2026-11-22T12:00:00.000Z');
+values.set('open', 'yes'); // A stale property must not reopen a finished experiment.
+post(valid);
+assert.equal(values.get('count.terminal.impression'), '2');
+values.delete('open');
 values.set('form.terminal', 'a');
 values.set('form.business', 'b');
 values.set('form.general', 'g');
+for (const arm of ['terminal', 'business', 'general']) values.set('prepared.' + arm, 'yes');
+assert.throws(() => context.armExperiment(), /Experiment is finished/);
+assert.equal(values.has('open'), false);
 context.reportMeetingLab();
 assert.equal(logs.length, 1);
 assert.equal(logs[0].includes('@'), false);
@@ -59,4 +84,9 @@ const report = JSON.parse(logs[0]);
 assert.equal(report.rows[0].signupPct, 50);
 assert.equal(report.rows[1].signupPct, 50);
 assert.equal(report.generalExcluded, 1);
-console.log('PASS: disabled/paused, strict payload, both arms, aggregate-only report, separate completions.');
+assert.equal(report.cutoff, '2026-11-22T12:00:00.000Z');
+assert.equal(report.through, report.cutoff);
+now = '2026-11-24T20:30:00.000Z';
+context.reportMeetingLab();
+assert.equal(logs[1], logs[0]);
+console.log('PASS: disabled/paused, strict payload, both arms, permanent cutoff, refusal to re-arm, aggregate-only report and bounded completions.');

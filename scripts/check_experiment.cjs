@@ -37,9 +37,13 @@ function load(relative, shared, options = {}) {
   const fire = (map, name) => (map.get(name) || []).forEach(fn => fn());
   const clickable = () => ({
     addEventListener(name, fn) { this[name] = fn; },
-    follow(isTrusted = true) { this.click?.({isTrusted, defaultPrevented: false}); },
+    hasAttribute() { return false; },
+    follow(isTrusted = true, modifiers = {}) {
+      this.click?.({isTrusted, defaultPrevented: false, button: 0, preventDefault() { this.defaultPrevented = true; }, ...modifiers});
+    },
   });
   const switcher = clickable(), markup = {replaceChildren(link) { this.link = link; }};
+  switcher.href = url.pathname.endsWith("/business.html") ? new URL("index.html?view=terminal#teach-back-title", url).href : new URL("business.html", url).href;
   let redirected;
   const context = {
     navigator: options.navigator || {},
@@ -56,6 +60,7 @@ function load(relative, shared, options = {}) {
       get href() { return url.href; },
       get pathname() { return url.pathname; },
       replace(destination) { redirected = destination; },
+      assign(destination) { redirected = destination; },
     },
     history: {
       state: options.state ?? null,
@@ -251,4 +256,54 @@ const armKey = "meeting-lab-v1:arm";
     assert.deepEqual(events(page), []);
   }
 }
-console.log("PASS: inactive general signup, allowlisted campaign entry, refresh and routing, invalid config, exact 50/50 byte split, sticky arm, one-time business handoff, direct/switch and preference exclusions, focused visible time, event deduplication and fixed analytics contract.");
+{
+  for (const initial of ["terminal", "business"]) {
+    const storage = settings();
+    const start = load("", storage, {random: initial === "business" ? 1 : 0});
+    const sourcePage = start.redirected ? load(start.redirected, storage) : start;
+    const originalForm = form(initial === "business" ? "b" : "t");
+    assert.deepEqual(events(sourcePage), ["impression"]);
+    assert.equal(sourcePage.markup.link.href, originalForm);
+    sourcePage.switcher.follow(false);
+    sourcePage.switcher.follow(true, {metaKey: true});
+    assert.deepEqual(events(sourcePage), ["impression"]);
+    assert.equal(sourcePage.redirected, undefined);
+
+    const direct = load(sourcePage.switcher.href, storage);
+    assert.equal(direct.markup.link.href, form("g"));
+    sourcePage.switcher.follow();
+    assert.deepEqual(events(sourcePage), ["impression", "variant_switch"]);
+    assert.equal(sourcePage.calls[1].body.arm, initial);
+    const elsewhere = load(sourcePage.redirected, {local: storage.local, session: new Map()});
+    assert.equal(elsewhere.markup.link.href, form("g"));
+    assert.deepEqual(events(elsewhere), []);
+    const landing = load(sourcePage.redirected, storage);
+    assert.equal(landing.url, sourcePage.switcher.href);
+    assert.equal(landing.markup.link.href, originalForm);
+    landing.advance(20000);
+    assert.deepEqual(events(landing), []);
+    landing.markup.link.follow();
+    landing.markup.link.follow();
+    assert.deepEqual(events(landing), ["waitlist_click"]);
+    assert.equal(landing.calls[0].body.arm, initial);
+    const refreshed = load(landing.url, storage, {state: landing.context.history.state});
+    assert.equal(refreshed.markup.link.href, originalForm);
+    refreshed.markup.link.follow();
+    assert.deepEqual(events(refreshed), []);
+    const disabled = load(landing.url, storage, {state: landing.context.history.state, navigator: {globalPrivacyControl: true}});
+    assert.equal(disabled.markup.link.href, form("g"));
+    assert.deepEqual(events(disabled), []);
+    const directAfter = load(landing.url, storage);
+    assert.equal(directAfter.markup.link.href, form("g"));
+    const markerReplay = load(sourcePage.redirected, storage);
+    assert.equal(markerReplay.markup.link.href, form("g"));
+    refreshed.switcher.follow();
+    const back = load(refreshed.redirected, storage);
+    assert.equal(back.markup.link.href, originalForm);
+    back.advance(20000);
+    back.markup.link.follow();
+    assert.deepEqual(events(refreshed), []);
+    assert.deepEqual(events(back), []);
+  }
+}
+console.log("PASS: switch attribution in both directions, exact history/refresh, one impression/click/switch, opt-out and manual/cross-tab exclusion; inactive general signup, allowlisted campaign entry, refresh and routing, invalid config, exact 50/50 byte split, sticky arm, one-time business handoff, direct/switch and preference exclusions, focused visible time, event deduplication and fixed analytics contract.");

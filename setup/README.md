@@ -39,10 +39,13 @@ manual navigation can bias them. The endpoint cannot authenticate a public
 browser; it discards invalid payloads and stores only allowed whole-number
 counts, but does not promise bot resistance.
 
-To pause collection immediately, run `pauseExperiment` and have the site
-maintainer disable the experiment. Pausing does not erase counters or close
-the forms. If stopping entirely, archive the web-app deployment and close the
-forms when no longer needed.
+To end the run, run `pauseExperiment` and have the site maintainer disable
+the experiment. The first pause permanently records a UTC cutoff and stops
+event collection. The final report counts form submissions only inside the
+start/cutoff window; later submissions do not change it. This does not close
+the forms or erase counters. The finished experiment cannot be re-armed; use
+a separately versioned run and fresh counters to measure again. Archive the
+web-app deployment and close arm forms when no longer needed.
 
 [Google's web app deployment guide](https://developers.google.com/apps-script/guides/web)
 · [Google Forms responder publication help](https://support.google.com/docs/answer/2839588)

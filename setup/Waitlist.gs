@@ -57,6 +57,7 @@ function armExperiment() {
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
+    if (store.getProperty('cutoff')) throw new Error('Experiment is finished. Create a new version to run again.');
     if (!store.getProperty('start')) store.setProperty('start', new Date().toISOString());
     store.setProperty('open', 'yes');
   } finally {
@@ -68,7 +69,11 @@ function pauseExperiment() {
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
-    PropertiesService.getScriptProperties().deleteProperty('open');
+    const store = PropertiesService.getScriptProperties();
+    if (store.getProperty('start') && !store.getProperty('cutoff')) {
+      store.setProperty('cutoff', new Date().toISOString());
+    }
+    store.deleteProperty('open');
   } finally {
     lock.releaseLock();
   }
@@ -90,7 +95,7 @@ function doPost(e) {
   if (!lock.tryLock(2500)) return output();
   try {
     const store = PropertiesService.getScriptProperties();
-    if (store.getProperty('open') !== 'yes') return output();
+    if (store.getProperty('open') !== 'yes' || store.getProperty('cutoff')) return output();
     const key = 'count.' + row.arm + '.' + row.event;
     const n = Number(store.getProperty(key) || 0);
     if (Number.isSafeInteger(n) && n >= 0 && n < Number.MAX_SAFE_INTEGER) {
@@ -107,6 +112,13 @@ function reportMeetingLab() {
   const start = s.getProperty('start');
   if (!start) throw new Error('Experiment has not been armed.');
   const from = new Date(start);
+  const cutoff = s.getProperty('cutoff') || null;
+  const through = cutoff ? new Date(cutoff) : new Date();
+  const completedInWindow = arm => FormApp.openById(s.getProperty('form.' + arm))
+      .getResponses(from).filter(response => {
+        const time = response.getTimestamp();
+        return time >= from && time <= through;
+      }).length;
   const rates = (n, d) => d > 0 ? Math.round(10000 * n / d) / 100 : null;
   const rows = ARMS.map(function (arm) {
     const count = event => Number(s.getProperty('count.' + arm + '.' + event) || 0);
@@ -114,12 +126,12 @@ function reportMeetingLab() {
     const attentive = count('attention');
     const clicks = count('waitlist_click');
     const switches = count('variant_switch');
-    const completed = FormApp.openById(s.getProperty('form.' + arm)).getResponses(from).length;
+    const completed = completedInWindow(arm);
     return {arm, impressions, attentive, clicks, switches, completed,
       attentionPct: rates(attentive, impressions), clickPct: rates(clicks, impressions),
       signupPct: rates(completed, impressions)};
   });
-  const general = FormApp.openById(s.getProperty('form.general')).getResponses(from).length;
+  const general = completedInWindow('general');
   // Never log form answers, email addresses, raw HTTP requests or identifiers.
-  console.log(JSON.stringify({start, rows, generalExcluded: general}, null, 2));
+  console.log(JSON.stringify({start, cutoff, through: through.toISOString(), rows, generalExcluded: general}, null, 2));
 }

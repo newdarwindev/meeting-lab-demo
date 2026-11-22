@@ -26,7 +26,9 @@
   const generalForm = formURL.test(config.generalForm) &&
     ![config.terminalForm, config.businessForm].includes(config.generalForm) ? config.generalForm : "";
   const isBusiness = location.pathname.endsWith("/business.html");
-  const arm = isBusiness ? "business" : "terminal";
+  const view = isBusiness ? "business" : "terminal";
+  let arm = view;
+  let continued = false;
   const declined = () => navigator.globalPrivacyControl === true ||
     [navigator.doNotTrack, window.doNotTrack].some(value => value === "1" || value === "yes");
   const markup = document.querySelector("[data-waitlist]");
@@ -60,6 +62,7 @@
       const campaignOnly = [...url.searchParams.keys()].every(key => campaignKeys.has(key));
       const rootEntry = url.pathname.endsWith("/") && campaignOnly && !url.hash;
       const historyArm = history.state && history.state[stateKey];
+      const historySwitch = history.state && history.state.meetingLabSwitch === true;
       let selected = localStorage.getItem(armKey);
 
       if (rootEntry && !armNames.includes(selected)) {
@@ -68,15 +71,34 @@
         localStorage.setItem(armKey, selected);
       }
 
-      if (rootEntry && selected === "business") {
+      const session = readSession();
+      const pending = session.pendingSwitch;
+      if (pending) {
+        delete session.pendingSwitch;
+        writeSession(session);
+      }
+      const switchURL = new URL(url);
+      switchURL.searchParams.delete("ab_switch");
+      const explicitDestination = isBusiness ? switchURL.search === "" :
+        switchURL.pathname.endsWith("/index.html") && switchURL.search === "?view=terminal";
+      if (explicitDestination && armNames.includes(selected) && url.searchParams.get("ab_switch") === "1" &&
+          pending && pending.arm === selected && pending.href === url.href &&
+          Date.now() >= pending.at && Date.now() - pending.at < 15000) {
+        history.replaceState({ [stateKey]: selected, meetingLabSwitch: true }, "", switchURL.href);
+        arm = selected;
+        enrolled = continued = true;
+      } else if (explicitDestination && !url.searchParams.has("ab_switch") && historySwitch &&
+                 historyArm === selected && armNames.includes(selected)) {
+        writeSession(session);
+        arm = selected;
+        enrolled = continued = true;
+      } else if (rootEntry && selected === "business") {
         const session = readSession();
         session.pendingBusiness = true;
         writeSession(session);
         location.replace(new URL("business.html?ab=business", url).href);
         return;
-      }
-
-      if (isBusiness && selected === "business" && url.search === "?ab=business" && !url.hash) {
+      } else if (isBusiness && selected === "business" && url.search === "?ab=business" && !url.hash) {
         const session = readSession();
         if (session.pendingBusiness === true) {
           delete session.pendingBusiness;
@@ -131,9 +153,31 @@
 
   for (const link of document.querySelectorAll("[data-variant-switch]")) {
     link.addEventListener("click", event => {
-      if (event.isTrusted && !event.defaultPrevented) sendOnce("variant_switch");
+      if (!event.isTrusted || event.defaultPrevented || declined() || event.button !== 0 ||
+          event.metaKey || event.ctrlKey || event.shiftKey || event.altKey ||
+          (link.target && link.target !== "_self") || link.hasAttribute("download")) return;
+      try {
+        const here = new URL(location.href);
+        const href = new URL(link.href, here);
+        const expected = new URL(isBusiness ? "index.html?view=terminal" : "business.html", here);
+        if (href.origin !== expected.origin || href.pathname !== expected.pathname ||
+            href.search !== expected.search) return;
+        href.searchParams.set("ab_switch", "1");
+        const session = readSession();
+        session.pendingSwitch = {arm, href: href.href, at: Date.now()};
+        writeSession(session);
+        event.preventDefault();
+        sendOnce("variant_switch");
+        location.assign(href.href);
+      } catch {
+        // Keep the normal, unbucketed link if the handoff cannot be written.
+      }
     });
   }
+
+  // Attribution for a voluntary switch is intention-to-treat. Do not count
+  // the selected edition as a new randomized impression or attention exposure.
+  if (continued) return;
 
   function impression() {
     if (document.visibilityState === "visible") sendOnce("impression");
