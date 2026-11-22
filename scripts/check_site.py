@@ -76,15 +76,31 @@ assert not page.stack
 assert page.headings["h1"] == 1 and page.headings["h2"] >= 5
 assert set(page.anchor_refs) <= page.ids, set(page.anchor_refs) - page.ids
 assert len(set(page.art)) == len(page.art) == 5
-assert len(re.findall(r"Concept 0[1-5] / 05", html)) == 5
+assert len(re.findall(r"CONCEPT 0[1-5] / 05", html)) == 5
 assert page.signup_count == 1 and page.external_count <= 1
 for state in ("Fresh", "Stale", "Missing"):
     assert html.count(f"<summary>{state}</summary>") == 1, state
 assert html.count('name="teach-back"') == 3
 assert "has no event timestamp" in html and "before the rehearsal" in html
 
+assert html.count('class="monitor-bar"') == 5
+assert "STATUS: CONCEPT" in html and "Unproven:" in html
+assert page.external_count == 1 or "SIGNUP: NOT OPEN YET" in html
 assert "styles.css" in page.files and "assets/lab.svg" in page.files
 assert "@media(max-width:600px)" in css and "prefers-reduced-motion" in css and "focus-visible" in css
+assert "@keyframes boot-in" in css and "@keyframes cursor-step" in css
+assert ".boot,.cursor{animation:none}" in css
+assert re.search(r"steps\(1,end\) 3\b", css) and " infinite" not in css
+
+def luminance(hexcode):
+    channels = [int(hexcode[i:i+2], 16) / 255 for i in (0, 2, 4)]
+    linear = [c / 12.92 if c <= .04045 else ((c + .055) / 1.055) ** 2.4 for c in channels]
+    return sum(c * w for c, w in zip(linear, (.2126, .7152, .0722)))
+
+for ink in ("--ink", "--full", "--dim", "--green", "--amber"):
+    fg = re.search(ink + r":#([a-f0-9]{6})", css).group(1)
+    for bg in ("0a0d09", "101610", "1b2816", "182318"):
+        assert (luminance(fg) + .05) / (luminance(bg) + .05) >= 4.5, (ink, bg)
 assert html.count("github.com/newdarwindev") == 1 and not re.search(r"\b(?:10|172|192)\.\d+\.\d+\.\d+\b", html)
 assert (ROOT / ".nojekyll").exists()
-print(f"PASS: HTML nesting, {len(page.anchor_refs)} fragment references, {len(page.art)} WebP images, responsive and reduced-motion rules, {page.external_count} public signup link(s), no client-side form or tracking.")
+print(f"PASS: HTML nesting, {len(page.anchor_refs)} fragment references, {len(page.art)} WebP images, text-palette contrast, timed boot and reduced-motion rules, {page.external_count} public signup link(s), no client-side form or tracking.")

@@ -3,95 +3,98 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Meeting Lab is an early-stage concept for checking live work, comparing evidence, and rehearsing handoffs without leaving the call.">
-  <meta name="theme-color" content="#101616">
-  <title>Meeting Lab — Make the handoff prove itself</title>
+  <meta name="description" content="Two isolated operators compare evidence and reproduce a workflow in a disposable workspace. Meeting Lab is an early product concept.">
+  <meta name="theme-color" content="#0a0d09">
+  <title>Meeting Lab / Prove the handoff</title>
   <link rel="icon" href="assets/lab.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body id="top">
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="header wrap">
-  <a class="wordmark" href="#top"><img src="assets/lab.svg" width="30" height="30" alt=""> Meeting Lab</a>
-  <nav aria-label="Main navigation">
-    <a href="#workspaces">Workspaces</a><a href="#capabilities">Capabilities</a><a class="nav-cta" href="#early-access">Early access <span aria-hidden="true">↗</span></a>
-  </nav>
+<header class="mast wrap">
+  <a class="brand" href="#top"><span class="brand-glyph" aria-hidden="true">▰</span> MEETING LAB<span class="brand-slash" aria-hidden="true">/</span></a>
+  <nav aria-label="Main navigation"><a href="#scenario">TEST</a><a href="#workspaces">SYSTEMS</a><a href="#capabilities">SPECS</a><a href="#early-access">EARLY ACCESS</a></nav>
 </header>
 <main id="main">
-  <section class="hero wrap" id="top" aria-labelledby="title">
-    <div class="hero-text">
-      <p class="eyebrow"><span class="signal"></span> Early-stage product concept</p>
-      <h1 id="title">Make the handoff <em>prove itself.</em></h1>
-      <p class="lede">Don’t record another walkthrough. Ask one operator to check the system and another to reproduce the result in isolation, all from the call you’re already in.</p>
-      <div class="hero-actions"><a class="button" href="#early-access">Early access <span aria-hidden="true">↗</span></a><a class="arrow-link" href="#scenario">See the release scenario <span aria-hidden="true">↓</span></a></div>
+  <section class="hero wrap" aria-labelledby="title">
+    <div class="console-cap"><span>ML/01 <span class="subtle">·</span> HANDOFF CONSOLE</span><span class="amber">STATUS: CONCEPT</span></div>
+    <div class="hero-grid">
+      <div class="boot primary">
+        <p class="command"><span aria-hidden="true">&gt;</span> verify handoff<span class="cursor" aria-hidden="true"></span></p>
+        <h1 id="title">PROVE THE<br><em>HANDOFF.</em></h1>
+        <p class="lede">Two isolated operators. One checks the source. The other reproduces the behavior. Compare the evidence in the call.</p>
+        <div class="links"><a class="launch" href="#scenario">Run the example <span aria-hidden="true">↵</span></a><a class="quiet-link" href="#early-access">Early access <span aria-hidden="true">↘</span></a></div>
+      </div>
+      <figure class="monitor boot delayed">
+        <div class="monitor-bar"><span>VIEW_03 / RELEASE CALL</span><span aria-hidden="true">■ ▪</span></div>
+        <img src="assets/03-release-call.webp" alt="Concept illustration of a release call comparing a rollout dashboard and a separate evidence view." width="1400" height="788" fetchpriority="high">
+        <figcaption><span>CONCEPT 03 / 05</span> Release cross-check</figcaption>
+      </figure>
     </div>
-    <figure class="hero-image">
-      <img src="assets/03-release-call.webp" alt="Concept illustration of a release call comparing a deployment dashboard and a separate evidence view." width="1400" height="788" fetchpriority="high">
-      <figcaption><span>Concept 03 / 05</span> A release review with independent evidence</figcaption>
-    </figure>
+    <div class="system-strip boot late"><span><b>A:</b> SOURCE</span><span><b>B:</b> INDEPENDENT VIEW</span><span><b>REPLAY:</b> DISPOSABLE</span><span class="amber"><b>MODE:</b> SYNTHETIC</span></div>
   </section>
 
-  <section class="scenario wrap" id="scenario" aria-labelledby="scenario-title">
-    <div class="section-heading"><p class="eyebrow">01 / Flagship scenario</p><h2 id="scenario-title">Ready isn’t the same as fresh.</h2><p>A green deployment badge can tell you the service is running. It doesn’t tell you whether a new event made it all the way through. Check both before you call the release done.</p></div>
-    <ol class="checks">
-      <li><span class="step">A · Release</span><h3>Read the rollout</h3><p>“Is the demo revision healthy?” Operator A checks the approved deployment view and reports the revision it sees.</p></li>
-      <li><span class="step">B · Evidence</span><h3>Find a fresh signal</h3><p>“Did the new test event arrive?” Operator B checks its own approved view for the matching fixture and timestamp.</p></li>
-      <li><span class="step">Together · Decision</span><h3>Say what’s still missing</h3><p>If the event is missing or stale, the reply says so. The operators don’t change the system or guess why the event is absent.</p></li>
+  <section class="wrap block" id="scenario" aria-labelledby="scenario-title">
+    <div class="section-head"><p class="address">01 <span aria-hidden="true">/</span> RELEASE CHECK</p><h2 id="scenario-title">Ready ≠ fresh.</h2><p>A deployment badge tells you the revision is running. It doesn’t prove a new event got through.</p></div>
+    <ol class="trace">
+      <li><span class="tag">A / SOURCE</span><h3>Read the rollout.</h3><p>Check the approved board: revision 42, Ready.</p></li>
+      <li><span class="tag">B / EVIDENCE</span><h3>Verify the arrival.</h3><p>In a separate view, look for test fixture ML-042 and its event time.</p></li>
+      <li><span class="tag">OUT / REPLY</span><h3>Report the gap.</h3><p>Stale or missing evidence means unverified. Don’t guess why. Don’t change the system.</p></li>
     </ol>
-    <p class="note">Illustrative workflow. The cross-check uses a shared synthetic fixture ID, not shared credentials or unrestricted desktop access.</p>
+    <p class="footnote"><span aria-hidden="true">&gt;</span> The fixture ID crosses the boundary. Credentials do not.</p>
   </section>
 
-  <section class="wrap surface" id="workspaces" aria-labelledby="workspaces-title">
-    <div class="section-heading"><p class="eyebrow">02 / Two separate environments</p><h2 id="workspaces-title">Two operators. Two views of the work.</h2><p>Each operator gets a separate, time-limited connection to a designated desktop. Seeing a second pane doesn’t grant permission to use it.</p></div>
-    <div class="workspace-grid">
-      <article class="workspace">
-        <figure><img src="assets/01-lima-workbench.webp" alt="Concept illustration of a release workspace with a deployment status dashboard." width="1400" height="788" loading="lazy"><figcaption><span>Concept 01 / 05</span> Lima workbench</figcaption></figure>
-        <div class="workspace-body"><p class="step">Operator A · Deployment workbench</p><h3>What’s been rolled out?</h3><p>Lima’s documented Ubuntu/Xfce layout has two remote work windows above two terminal panes. Our example fills one view with a synthetic release board showing application health, sync state and revision.</p></div>
+  <section class="wrap block" id="workspaces" aria-labelledby="workspaces-title">
+    <div class="section-head"><p class="address">02 <span aria-hidden="true">/</span> TARGETS</p><h2 id="workspaces-title">Each operator gets one approved destination.</h2><p>Each connection is scoped to a room, desktop and task, then expires. A visible pane is not a permission.</p></div>
+    <div class="paired">
+      <article class="unit">
+        <figure class="monitor"><div class="monitor-bar"><span>VIEW_01 / OPERATOR A</span><span aria-hidden="true">■ ▪</span></div><img src="assets/01-lima-workbench.webp" alt="Concept illustration of a release dashboard in the Lima workbench." width="1400" height="788" loading="lazy"><figcaption><span>CONCEPT 01 / 05</span> Lima workbench</figcaption></figure>
+        <div class="unit-body"><span class="tag">A / LIMA</span><h3>What shipped?</h3><p>Documented Ubuntu/Xfce layout: two remote windows above two terminal panes. Our release board is synthetic: health, sync and revision.</p></div>
       </article>
-      <article class="workspace">
-        <figure><img src="assets/02-stean-deck-observability.webp" alt="Concept illustration of the Stean Deck workstation with a trace viewer beside a runtime status view." width="1400" height="788" loading="lazy"><figcaption><span>Concept 02 / 05</span> Stean Deck workstation</figcaption></figure>
-        <div class="workspace-body"><p class="step">Operator B · Observability workstation</p><h3>What actually happened?</h3><p>Stean Deck offers two views: traces, dashboards and usage on one side; cluster, container and job health on the other. The approved route selects the pane or test fixture the operator may use.</p></div>
+      <article class="unit">
+        <figure class="monitor"><div class="monitor-bar"><span>VIEW_02 / OPERATOR B</span><span aria-hidden="true">■ ▪</span></div><img src="assets/02-stean-deck-observability.webp" alt="Concept illustration of Stean Deck’s trace viewer beside its runtime status view." width="1400" height="788" loading="lazy"><figcaption><span>CONCEPT 02 / 05</span> Stean Deck workstation</figcaption></figure>
+        <div class="unit-body"><span class="tag">B / STEAN DECK</span><h3>What happened?</h3><p>One pane shows traces and usage. The other shows cluster, containers and jobs. Each session is bound to an approved pane or kiosk fixture.</p></div>
       </article>
     </div>
   </section>
 
-  <section class="wrap" id="use-cases" aria-labelledby="use-cases-title">
-    <div class="section-heading"><p class="eyebrow">03 / Beyond the status check</p><h2 id="use-cases-title">Make what you can see useful.</h2></div>
-    <article class="feature-story">
-      <figure><img src="assets/04-isolated-teach-back.webp" alt="Concept illustration of two operators comparing outputs from an original procedure and an isolated synthetic rehearsal." width="1400" height="788" loading="lazy"><figcaption><span>Concept 04 / 05</span> Isolated teach-back</figcaption></figure>
-      <div><p class="step">QA &amp; onboarding</p><h3>Show it. Then rehearse it.</h3><p>One operator explains an approved workflow. The other rebuilds just one behavior in a disposable workspace with test data. Compare what both actually produce. The rehearsal doesn’t use live credentials or connect to the original system.</p></div>
+  <section class="wrap block" id="use-cases" aria-labelledby="cases-title">
+    <div class="section-head"><p class="address">03 <span aria-hidden="true">/</span> REHEARSAL + LIVE SUPPORT</p><h2 id="cases-title">Show the work. Test the result.</h2></div>
+    <article class="split">
+      <figure class="monitor"><div class="monitor-bar"><span>VIEW_04 / TEACH-BACK</span><span aria-hidden="true">■ ▪</span></div><img src="assets/04-isolated-teach-back.webp" alt="Concept illustration of operators comparing a source procedure with its synthetic rehearsal." width="1400" height="788" loading="lazy"><figcaption><span>CONCEPT 04 / 05</span> Isolated teach-back</figcaption></figure>
+      <div><span class="tag">QA / ONBOARDING</span><h3>Rebuild one behavior.</h3><p>A explains the approved procedure. B reproduces one result with pinned test data. No route back to the live system. No shared secrets.</p></div>
     </article>
-    <div class="teach-back" aria-labelledby="teach-back-title">
-      <div><p class="step">Try a synthetic rehearsal</p><h3 id="teach-back-title">Same green badge. Three different outcomes.</h3><p>The source says revision 42 is Ready. Open a result below to compare the replica with the expected fixture, ML-042.</p></div>
+    <div class="rehearsal" aria-labelledby="teach-back-title">
+      <div><p class="address">FIXTURE / ML-042</p><h3 id="teach-back-title">Check the receipt.</h3><p>Source: revision 42, Ready. Rehearsal start: 14:30 UTC. Inspect the replica:</p></div>
       <div class="result-list">
-        <details name="teach-back" open><summary>Fresh</summary><p><strong>Match.</strong> The replica shows ML-042 at 14:32 UTC, after the rehearsal began. Both sides show the expected result.</p></details>
-        <details name="teach-back"><summary>Stale</summary><p><strong>Not verified.</strong> The replica shows ML-042 from 14:12 UTC, before the rehearsal. The old result does not count.</p></details>
-        <details name="teach-back"><summary>Missing</summary><p><strong>Mismatch.</strong> The replica labels ML-042 Ready but has no event timestamp. Without a timestamp, Ready incorrectly hides the lack of evidence that a new event arrived.</p></details>
+        <details name="teach-back" open><summary>Fresh</summary><p><strong>MATCH.</strong> ML-042 arrived at 14:32 UTC, after the rehearsal began.</p></details>
+        <details name="teach-back"><summary>Stale</summary><p><strong>UNVERIFIED.</strong> ML-042 shows 14:12 UTC, before the rehearsal. Old evidence doesn’t count.</p></details>
+        <details name="teach-back"><summary>Missing</summary><p><strong>MISMATCH.</strong> The replica says Ready but has no event timestamp. Arrival unproven.</p></details>
       </div>
     </div>
-    <article class="feature-story">
-      <figure><img src="assets/05-studio-independent-feeds.webp" alt="Concept illustration of a presenter in a virtual studio with separate remote views fitted into two TVs, one blank." width="1400" height="788" loading="lazy"><figcaption><span>Concept 05 / 05</span> Studio with independent feeds</figcaption></figure>
-      <div><p class="step">Live support &amp; demos</p><h3>Show only the windows you choose.</h3><p>Put an opted-in presenter and two approved windows in one camera feed. If a window drops, only that TV goes blank. Ask what a dialog says and get a read-only translation that preserves the error code, without clicking the dialog.</p></div>
+    <article class="split">
+      <figure class="monitor"><div class="monitor-bar"><span>VIEW_05 / STUDIO</span><span aria-hidden="true">■ ▪</span></div><img src="assets/05-studio-independent-feeds.webp" alt="Concept illustration of a presenter with two separate virtual TV feeds, one blank." width="1400" height="788" loading="lazy"><figcaption><span>CONCEPT 05 / 05</span> Independent window feeds</figcaption></figure>
+      <div><span class="tag">SUPPORT / DEMOS</span><h3>Keep the feed scoped.</h3><p>Put two approved windows behind an opted-in presenter. Lose one window, blank one TV. Translate a dialog without clicking it; keep the error code intact.</p></div>
     </article>
   </section>
 
-  <section class="wrap" id="capabilities" aria-labelledby="capabilities-title">
-    <div class="section-heading"><p class="eyebrow">04 / Roadmap</p><h2 id="capabilities-title">What Meeting Lab is designed to do.</h2><p>These are planned capabilities, not a list of features available to customers now.</p></div>
-    <div class="capability-grid">
-      <article><span class="badge">Planned + prototype</span><h3>Operate from the meeting</h3><p>Request a bounded action in a private Google Meet or Zoom Web call. The operator checks the result and responds in that room. Out-of-scope requests do not trigger desktop input.</p></article>
-      <article><span class="badge">Planned + prototype</span><h3>Separate access by task</h3><p>Give each operator distinct, expiring access to its room, speech services and designated desktop. A wrong target, expired permission or loss of connection stops the action.</p></article>
-      <article><span class="badge">Planned + prototype</span><h3>Listen, speak and translate</h3><p>Stream English and Russian speech to text, use text replies by default, and opt into cancellable speech or a synthetic avatar’s mouth-only overlay. Translate or explain approved window crops without treating screen content as commands.</p></article>
-      <article><span class="badge">Planned + prototype</span><h3>Compose a camera scene</h3><p>Use separate available webcam assignments and fit approved windows into fixed TVs on a virtual set. Keep the other feeds running if one window disappears.</p></article>
-      <article><span class="badge">Planned + prototype</span><h3>Route models and traces privately</h3><p>Use temporary endpoints limited to approved models. Preserve authorized diagnostics without credentials or screen payloads in default trace content.</p></article>
-      <article><span class="badge">Planned</span><h3>Rehearse without copying the live system</h3><p>Reproduce an agreed result with pinned synthetic inputs and a disposable workspace. Compare outputs before calling the handoff repeatable.</p></article>
-    </div>
-    <aside class="status-panel" aria-labelledby="status-title"><h3 id="status-title">Where the evidence stops</h3><p><strong>Component checks:</strong> The Deck workstation passed its own runtime checks. Lima’s workbench layout is documented; the sample release board is synthetic. Lab tests have demonstrated camera relay, native Zoom video and local speech transcription under test conditions. <strong>Not yet proven:</strong> An end-to-end authorized operator turn and remote reply from the actual guest to its intended desktop in both browser meeting providers.</p></aside>
+  <section class="wrap block" id="capabilities" aria-labelledby="spec-title">
+    <div class="section-head"><p class="address">04 <span aria-hidden="true">/</span> DESIGN SPEC</p><h2 id="spec-title">The planned stack.</h2></div>
+    <dl class="spec-list">
+      <div><dt>01 / MEETING</dt><dd>Private Meet and Zoom Web. Bounded requests; verified replies in the same call.</dd></div>
+      <div><dt>02 / ACCESS</dt><dd>Separate, expiring room, speech and RDP permissions. Stop on wrong target, expiry or disconnect.</dd></div>
+      <div><dt>03 / VOICE + VISION</dt><dd>Streaming English/Russian transcription; text first. Opt-in cancellable speech and synthetic mouth-only avatar overlay. Read-only translation and explanation of approved screen crops.</dd></div>
+      <div><dt>04 / CAMERA</dt><dd>One available webcam per guest, or synthetic input. Presenter plus approved windows; blank failed feeds independently.</dd></div>
+      <div><dt>05 / MODELS + TRACES</dt><dd>Temporary gateway; approved models only. Authorized traces omit secrets and screen payloads by default.</dd></div>
+      <div><dt>06 / REHEARSAL</dt><dd>One behavior, pinned fixtures, disposable workspace. Compare outputs without cloning the live system.</dd></div>
+    </dl>
+    <aside class="status" aria-labelledby="status-title"><h3 id="status-title">Evidence boundary</h3><p><strong>Component checks:</strong> Deck runtime, camera relay, native Zoom video and local transcription. Lima layout documented; release board synthetic.</p><p><strong>Unproven:</strong> private browser call → intended RDP desktop → verified remote reply; full isolated teach-back.</p></aside>
   </section>
 
-  <section class="wrap" id="early-access" aria-labelledby="waitlist-title">
-    <div class="waitlist"><p class="eyebrow"><span class="signal"></span> Early access</p><h2 id="waitlist-title">What handoff would you test?</h2><p>We’re looking for teams that can bring a small, test-safe workflow and a clear way to verify the result.</p><p data-waitlist>No signup is open on this preview yet.</p></div>
+  <section class="wrap block" id="early-access" aria-labelledby="waitlist-title">
+    <div class="waitlist"><p class="address"><span aria-hidden="true">&gt;</span> EARLY ACCESS</p><h2 id="waitlist-title">Bring a workflow we can verify.</h2><p>One test-safe procedure. One result you can check independently.</p><p data-waitlist><span class="amber">SIGNUP: NOT OPEN YET</span></p></div>
   </section>
 </main>
-<footer class="wrap footer"><span>Meeting Lab</span><span>Early-stage concept · Images are illustrative, not product screenshots.</span><span><a href="https://github.com/newdarwindev/meeting-lab-demo">Source on GitHub</a> · <a href="#top">Back to top ↑</a></span></footer>
+<footer class="wrap footer"><span>MEETING LAB / CONCEPT ART, NOT PRODUCT SCREENSHOTS</span><div><a href="https://github.com/newdarwindev/meeting-lab-demo">Public source</a> <span aria-hidden="true">/</span> <a href="#top">Top ↑</a></div></footer>
 </body>
 </html>

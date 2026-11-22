@@ -13,7 +13,7 @@ Run `python3 -m http.server 8080` from the repository root, then open `http://lo
 The only external signup destination belongs inside the element marked `data-waitlist` at the end of `index.html`. Replace its placeholder paragraph with one accessible link and a short privacy statement after an approved HTTPS signup destination is ready:
 
 ```html
-<p data-waitlist><a class="button" href="https://signup.example/">Join the waitlist <span aria-hidden="true">↗</span></a></p>
+<p data-waitlist><a class="launch" href="https://signup.example/">Join the waitlist <span aria-hidden="true">↗</span></a></p>
 ```
 
 The static site does not submit or store signup information. Do not place responses or form credentials in this repository. The section navigation links remain local and need no changes. Test the form from a signed-out browser with synthetic data before announcing the waitlist.
