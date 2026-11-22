@@ -23,6 +23,7 @@ class Document(HTMLParser):
         self.art = []
         self.external_count = 0
         self.signup_count = 0
+        self.scripts = []
         self.headings = {"h1": 0, "h2": 0}
         self.stack = []
 
@@ -30,7 +31,10 @@ class Document(HTMLParser):
         attrs = dict(pairs)
         if tag not in {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}:
             self.stack.append((tag, attrs))
-        assert tag not in {"form", "iframe", "script"}, f"Unexpected active element: {tag}"
+        assert tag not in {"form", "iframe"}, f"Unexpected active element: {tag}"
+        if tag == "script":
+            assert attrs == {"src": "experiment.js", "defer": None}, attrs
+            self.scripts.append(attrs["src"])
         if tag == "html":
             assert attrs.get("lang") == "en"
         if tag == "main":
@@ -83,6 +87,7 @@ assert set(page.anchor_refs) <= page.ids, set(page.anchor_refs) - page.ids
 assert len(set(page.art)) == len(page.art) == 5
 assert len(re.findall(r"CONCEPT 0[1-5] / 05", html)) == 5
 assert page.signup_count == 1 and page.external_count <= 1
+assert page.scripts == ["experiment.js"] and "aggregate" in html
 for state in ("Fresh", "Stale", "Missing"):
     assert html.count(f"<summary>{state}</summary>") == 1, state
 assert html.count('name="teach-back"') == 3
@@ -115,7 +120,8 @@ assert not business.stack
 assert business.headings == {"h1": 1, "h2": 4}
 assert set(business.anchor_refs) <= business.ids
 assert set(business.art) <= set(page.art) and business.art
-assert business.external_count == 0 and business.signup_count == 0
+assert business.external_count == 0 and business.signup_count == 1
+assert business.scripts == page.scripts and "aggregate" in business_html
 assert "business.css" in business.files and "styles.css" not in business.files
 assert "github.com" not in business_html and "https://" not in business_html
 assert business_html.count("<dt>Bring</dt>") == 4
@@ -128,11 +134,13 @@ for document in routes.values():
 assert page.cross_refs.count(("business.html", "")) >= 2
 assert business.cross_refs.count(("index.html", "")) >= 2
 assert ("index.html", "teach-back-title") in business.cross_refs
-assert ("index.html", "early-access") in business.cross_refs
+assert "early-access" in business.ids
+assert 'data-variant-switch href="business.html"' in html
+assert 'data-variant-switch href="index.html?view=terminal' in business_html
 assert "prefers-reduced-motion" in business_css and "focus-visible" in business_css
 for ink in ("--ink", "--muted", "--accent"):
     fg = re.search(ink + r":#([a-f0-9]{6})", business_css).group(1)
     for bg in ("ffffff", "f9fbff", "edf2fa"):
         assert (luminance(bg) + .05) / (luminance(fg) + .05) >= 4.5, (ink, bg)
-print("PASS: business page includes 4 decision workflows, relative cross-page navigation, shared demo and early-access links, readable palette, and no external requests.")
-print(f"PASS: HTML nesting, {len(page.anchor_refs)} fragment references, {len(page.art)} WebP images, text-palette contrast, timed boot and reduced-motion rules, {page.external_count} public signup link(s), no client-side form or tracking.")
+print("PASS: business page includes 4 decision workflows, relative cross-page navigation, relative demo links, local early access, readable palette, and no third-party assets.")
+print(f"PASS: HTML nesting, {len(page.anchor_refs)} fragment references, {len(page.art)} WebP images, text-palette contrast, timed boot and reduced-motion rules, {page.external_count} public signup link(s), no embedded client-side form.")

@@ -8,13 +8,14 @@
   <title>Meeting Lab for Teams | Business use cases</title>
   <link rel="icon" href="assets/lab.svg" type="image/svg+xml">
   <link rel="stylesheet" href="business.css">
+  <script src="experiment.js" defer></script>
 </head>
 <body id="top">
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="wrap navigation">
     <a class="wordmark" href="#top"><span aria-hidden="true">ML</span> Meeting Lab <small>for teams</small></a>
-    <nav aria-label="Main navigation"><a href="#scenarios">Use cases</a><a href="#proof">Readiness</a><a href="index.html">Technical terminal <span aria-hidden="true">↗</span></a><a class="nav-cta" href="index.html#early-access">Early access</a></nav>
+    <nav aria-label="Main navigation"><a href="#scenarios">Use cases</a><a href="#proof">Readiness</a><a data-variant-switch href="index.html?view=terminal">Technical terminal <span aria-hidden="true">↗</span></a><a class="nav-cta" href="#early-access">Early access</a></nav>
   </div>
 </header>
 
@@ -24,7 +25,7 @@
       <p class="eyebrow">Product concept · Business demonstrations</p>
       <h1 id="title">End the call with a result you can verify.</h1>
       <p class="intro">Before you approve a rollout, hand off a process or act on a support call, ask two independently scoped operators to check what happened and show the evidence.</p>
-      <div class="buttons"><a class="button primary" href="#scenarios">Explore the use cases</a><a class="button secondary" href="index.html#teach-back-title">Try the technical demo <span aria-hidden="true">↗</span></a></div>
+      <div class="buttons"><a class="button primary" href="#scenarios">Explore the use cases</a><a class="button secondary" data-variant-switch href="index.html?view=terminal#teach-back-title">Try the technical demo <span aria-hidden="true">↗</span></a></div>
     </div>
     <figure class="hero-image">
       <img src="assets/03-release-call.webp" width="1400" height="788" fetchpriority="high" alt="Concept illustration of release and evidence dashboards shown together during a call.">
@@ -42,7 +43,7 @@
           <div><dt>Ask</dt><dd>Operator A reads the release board in the Lima workbench example. Operator B looks for the event in Stean Deck’s separate evidence view.</dd></div>
           <div><dt>Accept when</dt><dd>The revision matches and the expected event appears after the test began. A stale or missing timestamp means hold sign-off; the operators don’t guess or change anything.</dd></div>
         </dl>
-        <a class="case-link" href="index.html#teach-back-title">Compare fresh, stale and missing evidence <span aria-hidden="true">↗</span></a>
+        <a class="case-link" data-variant-switch href="index.html?view=terminal#teach-back-title">Compare fresh, stale and missing evidence <span aria-hidden="true">↗</span></a>
       </article>
 
       <article class="case" id="case-training">
@@ -94,12 +95,12 @@
     </dl>
   </section>
 
-  <section class="wrap action" aria-labelledby="pilot-title">
+  <section class="wrap action" id="early-access" aria-labelledby="pilot-title">
     <div><p class="eyebrow">Pilot fit</p><h2 id="pilot-title">Start with one decision.</h2><p>Pick a low-risk procedure and the evidence that would make your team say “done.”</p></div>
-    <div class="buttons"><a class="button primary" href="index.html#early-access">Early-access status</a><a class="button secondary" href="index.html">Open the technical terminal <span aria-hidden="true">↗</span></a></div>
+    <div class="signup"><p data-waitlist><strong>Signup is not open yet.</strong></p><p class="measurement">When the page test is active, we count randomized views, 10 seconds of attention, edition switches and waitlist clicks in aggregate. Signup is a separate Google Form.</p><a class="button secondary" data-variant-switch href="index.html?view=terminal">Open the technical terminal <span aria-hidden="true">↗</span></a></div>
   </section>
 </main>
 
-<footer class="wrap footer"><span>Meeting Lab for Teams · An early-stage product concept</span><a href="index.html">Technical terminal</a><a href="#top">Back to top ↑</a></footer>
+<footer class="wrap footer"><span>Meeting Lab for Teams · An early-stage product concept</span><a data-variant-switch href="index.html?view=terminal">Technical terminal</a><a href="#top">Back to top ↑</a></footer>
 </body>
 </html>

@@ -87,3 +87,6 @@ nav a:hover{text-decoration:underline}
   .cases,.readiness>div,.case dl div{grid-template-columns:minmax(0,1fr)}
 }
 @media(prefers-reduced-motion:reduce){:root{scroll-behavior:auto}}
+.signup{max-width:25rem}
+.signup .button.secondary{margin-top:.65rem}
+.measurement{font-size:.78rem}

@@ -8,12 +8,13 @@
   <title>Meeting Lab / Prove the handoff</title>
   <link rel="icon" href="assets/lab.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
+  <script src="experiment.js" defer></script>
 </head>
 <body id="top">
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="mast wrap">
   <a class="brand" href="#top"><span class="brand-glyph" aria-hidden="true">▰</span> MEETING LAB<span class="brand-slash" aria-hidden="true">/</span></a>
-  <nav aria-label="Main navigation"><a href="#scenario">TEST</a><a href="#workspaces">SYSTEMS</a><a href="#capabilities">SPECS</a><a href="business.html">BUSINESS USE CASES</a><a href="#early-access">EARLY ACCESS</a></nav>
+  <nav aria-label="Main navigation"><a href="#scenario">TEST</a><a href="#workspaces">SYSTEMS</a><a href="#capabilities">SPECS</a><a data-variant-switch href="business.html">BUSINESS USE CASES</a><a href="#early-access">EARLY ACCESS</a></nav>
 </header>
 <main id="main">
   <section class="hero wrap" aria-labelledby="title">
@@ -23,7 +24,7 @@
         <p class="command"><span aria-hidden="true">&gt;</span> verify handoff<span class="cursor" aria-hidden="true"></span></p>
         <h1 id="title">PROVE THE<br><em>HANDOFF.</em></h1>
         <p class="lede">Two isolated operators. One checks the source. The other reproduces the behavior. Compare the evidence in the call.</p>
-        <div class="links"><a class="launch" href="#scenario">Run the example <span aria-hidden="true">↵</span></a><a class="quiet-link" href="business.html">Business use cases <span aria-hidden="true">↗</span></a><a class="quiet-link" href="#early-access">Early access <span aria-hidden="true">↘</span></a></div>
+        <div class="links"><a class="launch" href="#scenario">Run the example <span aria-hidden="true">↵</span></a><a class="quiet-link" data-variant-switch href="business.html">Business use cases <span aria-hidden="true">↗</span></a><a class="quiet-link" href="#early-access">Early access <span aria-hidden="true">↘</span></a></div>
       </div>
       <figure class="monitor boot delayed">
         <div class="monitor-bar"><span>VIEW_03 / RELEASE CALL</span><span aria-hidden="true">■ ▪</span></div>
@@ -92,9 +93,9 @@
   </section>
 
   <section class="wrap block" id="early-access" aria-labelledby="waitlist-title">
-    <div class="waitlist"><p class="address"><span aria-hidden="true">&gt;</span> EARLY ACCESS</p><h2 id="waitlist-title">Bring a workflow we can verify.</h2><p>One test-safe procedure. One result you can check independently.</p><p data-waitlist><span class="amber">SIGNUP: NOT OPEN YET</span></p></div>
+    <div class="waitlist"><p class="address"><span aria-hidden="true">&gt;</span> EARLY ACCESS</p><h2 id="waitlist-title">Bring a workflow we can verify.</h2><p>One test-safe procedure. One result you can check independently.</p><p data-waitlist><span class="amber">SIGNUP: NOT OPEN YET</span></p><p class="measurement">When the page test is active, we count randomized views, 10 seconds of attention, edition switches and waitlist clicks in aggregate. Signup is a separate Google Form.</p></div>
   </section>
 </main>
-<footer class="wrap footer"><span>MEETING LAB / CONCEPT ART, NOT PRODUCT SCREENSHOTS</span><div><a href="business.html">Business use cases</a> <span aria-hidden="true">/</span> <a href="https://github.com/newdarwindev/meeting-lab-demo">Public source</a> <span aria-hidden="true">/</span> <a href="#top">Top ↑</a></div></footer>
+<footer class="wrap footer"><span>MEETING LAB / CONCEPT ART, NOT PRODUCT SCREENSHOTS</span><div><a data-variant-switch href="business.html">Business use cases</a> <span aria-hidden="true">/</span> <a href="https://github.com/newdarwindev/meeting-lab-demo">Public source</a> <span aria-hidden="true">/</span> <a href="#top">Top ↑</a></div></footer>
 </body>
 </html>

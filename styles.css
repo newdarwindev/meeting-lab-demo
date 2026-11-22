@@ -130,3 +130,4 @@ figcaption span{color:var(--green)}
   :root{scroll-behavior:auto}
   .boot,.cursor{animation:none}
 }
+.measurement{max-width:46rem;font-size:.78rem}
