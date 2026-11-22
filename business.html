@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Four demonstration workflows for Meeting Lab: release sign-off, onboarding, multilingual support, and live customer demos.">
+  <meta name="theme-color" content="#f5f7fb">
+  <title>Meeting Lab for Teams | Business use cases</title>
+  <link rel="icon" href="assets/lab.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="business.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap navigation">
+    <a class="wordmark" href="#top"><span aria-hidden="true">ML</span> Meeting Lab <small>for teams</small></a>
+    <nav aria-label="Main navigation"><a href="#scenarios">Use cases</a><a href="#proof">Readiness</a><a href="index.html">Technical terminal <span aria-hidden="true">↗</span></a><a class="nav-cta" href="index.html#early-access">Early access</a></nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero wrap" aria-labelledby="title">
+    <div class="hero-copy">
+      <p class="eyebrow">Product concept · Business demonstrations</p>
+      <h1 id="title">End the call with a result you can verify.</h1>
+      <p class="intro">Before you approve a rollout, hand off a process or act on a support call, ask two independently scoped operators to check what happened and show the evidence.</p>
+      <div class="buttons"><a class="button primary" href="#scenarios">Explore the use cases</a><a class="button secondary" href="index.html#teach-back-title">Try the technical demo <span aria-hidden="true">↗</span></a></div>
+    </div>
+    <figure class="hero-image">
+      <img src="assets/03-release-call.webp" width="1400" height="788" fetchpriority="high" alt="Concept illustration of release and evidence dashboards shown together during a call.">
+      <figcaption>Concept illustration · Release review with two independent views.</figcaption>
+    </figure>
+  </section>
+
+  <section class="wrap block" id="scenarios" aria-labelledby="scenarios-title">
+    <div class="section-head"><p class="eyebrow">Four demo workflows</p><h2 id="scenarios-title">What a team can decide in the call</h2></div>
+    <div class="cases">
+      <article class="case" id="case-release">
+        <header><p class="label"><span>01</span> Release engineering</p><h3>Sign off only after a new event arrives.</h3><p>Revision 42 is marked Ready. Can the release manager sign off on the connected workflow?</p></header>
+        <dl>
+          <div><dt>Bring</dt><dd>The expected revision, synthetic event ID and earliest valid timestamp.</dd></div>
+          <div><dt>Ask</dt><dd>Operator A reads the release board in the Lima workbench example. Operator B looks for the event in Stean Deck’s separate evidence view.</dd></div>
+          <div><dt>Accept when</dt><dd>The revision matches and the expected event appears after the test began. A stale or missing timestamp means hold sign-off; the operators don’t guess or change anything.</dd></div>
+        </dl>
+        <a class="case-link" href="index.html#teach-back-title">Compare fresh, stale and missing evidence <span aria-hidden="true">↗</span></a>
+      </article>
+
+      <article class="case" id="case-training">
+        <header><p class="label"><span>02</span> Training &amp; operations</p><h3>Prove the procedure is teachable.</h3><p>The owner has documented a workflow. Can a new team reproduce one important result without the live system?</p></header>
+        <dl>
+          <div><dt>Bring</dt><dd>One approved procedure, a synthetic input and an exact expected output.</dd></div>
+          <div><dt>Ask</dt><dd>Operator A demonstrates the agreed step. Operator B tries to reproduce it in a disposable workspace with no live credentials or route back to the source.</dd></div>
+          <div><dt>Accept when</dt><dd>The same fixture produces the agreed output on both sides. If it doesn’t, record the mismatch instead of marking the handoff complete.</dd></div>
+        </dl>
+      </article>
+
+      <article class="case" id="case-support">
+        <header><p class="label"><span>03</span> Multilingual support</p><h3>Read the error before choosing a fix.</h3><p>A Russian dialog appears during an English-language support call. What is the next safe step?</p></header>
+        <dl>
+          <div><dt>Bring</dt><dd>An approved crop of the dialog and an authorized spoken request.</dd></div>
+          <div><dt>Ask</dt><dd>Transcribe the request, translate the visible text and explain the screen without clicking. Reply in meeting chat; use cancellable speech or a synthetic avatar overlay only when explicitly enabled.</dd></div>
+          <div><dt>Accept when</dt><dd>The reply preserves the error code and separates visible facts from possible causes. No desktop action is taken.</dd></div>
+        </dl>
+      </article>
+
+      <article class="case" id="case-demo">
+        <header><p class="label"><span>04</span> Customer demos</p><h3>Keep the demo visible if one view drops.</h3><p>A presenter needs to show setup and results together without sharing an entire screen.</p></header>
+        <dl>
+          <div><dt>Bring</dt><dd>An opted-in presenter, an available or synthetic camera, and two approved application windows.</dd></div>
+          <div><dt>Ask</dt><dd>Fit each window into its own TV in one composed camera feed. During rehearsal, disconnect just one window.</dd></div>
+          <div><dt>Accept when</dt><dd>Only the affected TV goes blank. The presenter and other view stay visible; no unrelated window replaces it.</dd></div>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <section class="guardrails" aria-labelledby="scope-title">
+    <div class="wrap scope">
+      <div class="section-head"><p class="eyebrow">Controls behind the demonstrations</p><h2 id="scope-title">The call is not a permission grant.</h2></div>
+      <div class="rules">
+        <article><h3>Limit who can act and where</h3><p>The design uses separate, expiring permissions for the private Meet or Zoom Web room, speech and designated RDP desktop. Wrong target, expiry or disconnect stops input.</p></article>
+        <article><h3>Keep evidence separate from access</h3><p>A can inspect the approved release view; B can inspect an approved traces, usage or runtime pane. Sharing a fixture identifier doesn’t share credentials or unlock another desktop.</p></article>
+        <article><h3>Review only authorized data</h3><p>A temporary gateway limits model choice. The planned diagnostic traces exclude credentials and screen payloads by default; visible screen text cannot authorize a new action.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap block proof" id="proof" aria-labelledby="proof-title">
+    <div class="section-head"><p class="eyebrow">Readiness</p><h2 id="proof-title">What has and hasn’t been verified</h2></div>
+    <dl class="readiness">
+      <div><dt><span class="status checked">Component checks</span></dt><dd>Stean Deck’s dual-view workstation has separate runtime evidence. Lab component tests have demonstrated camera relay, native Zoom video and local transcription on test audio.</dd></div>
+      <div><dt><span class="status documented">Documented</span></dt><dd>Lima’s workbench layout has two remote views over terminal panes. The release board and event workflow on this page are synthetic.</dd></div>
+      <div><dt><span class="status planned">Not verified end to end</span></dt><dd>An authorized browser call, work on the designated RDP desktop and verified reply in the same room are not qualified as one live flow. The isolated teach-back is also unproven end to end. These are demonstration designs, not customer results.</dd></div>
+    </dl>
+  </section>
+
+  <section class="wrap action" aria-labelledby="pilot-title">
+    <div><p class="eyebrow">Pilot fit</p><h2 id="pilot-title">Start with one decision.</h2><p>Pick a low-risk procedure and the evidence that would make your team say “done.”</p></div>
+    <div class="buttons"><a class="button primary" href="index.html#early-access">Early-access status</a><a class="button secondary" href="index.html">Open the technical terminal <span aria-hidden="true">↗</span></a></div>
+  </section>
+</main>
+
+<footer class="wrap footer"><span>Meeting Lab for Teams · An early-stage product concept</span><a href="index.html">Technical terminal</a><a href="#top">Back to top ↑</a></footer>
+</body>
+</html>

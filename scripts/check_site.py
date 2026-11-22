@@ -8,6 +8,8 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 html = (ROOT / "index.html").read_text()
 css = (ROOT / "styles.css").read_text()
+business_html = (ROOT / "business.html").read_text()
+business_css = (ROOT / "business.css").read_text()
 
 
 class Document(HTMLParser):
@@ -15,6 +17,7 @@ class Document(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.ids = set()
         self.anchor_refs = []
+        self.cross_refs = []
         self.attrs = []
         self.files = set()
         self.art = []
@@ -56,6 +59,8 @@ class Document(HTMLParser):
                 assert not parts.path.startswith("/") and ".." not in Path(parts.path).parts
                 assert (ROOT / parts.path).is_file(), f"Missing asset {parts.path}"
                 self.files.add(parts.path)
+                if parts.path.endswith(".html"):
+                    self.cross_refs.append((parts.path, parts.fragment))
         if tag == "img":
             assert "alt" in attrs and attrs.get("width") and attrs.get("height")
             if attrs["src"].endswith(".webp"):
@@ -103,4 +108,31 @@ for ink in ("--ink", "--full", "--dim", "--green", "--amber"):
         assert (luminance(fg) + .05) / (luminance(bg) + .05) >= 4.5, (ink, bg)
 assert html.count("github.com/newdarwindev") == 1 and not re.search(r"\b(?:10|172|192)\.\d+\.\d+\.\d+\b", html)
 assert (ROOT / ".nojekyll").exists()
+business = Document()
+business.feed(business_html)
+business.close()
+assert not business.stack
+assert business.headings == {"h1": 1, "h2": 4}
+assert set(business.anchor_refs) <= business.ids
+assert set(business.art) <= set(page.art) and business.art
+assert business.external_count == 0 and business.signup_count == 0
+assert "business.css" in business.files and "styles.css" not in business.files
+assert "github.com" not in business_html and "https://" not in business_html
+assert business_html.count("<dt>Bring</dt>") == 4
+assert business_html.count("<dt>Ask</dt>") == 4
+assert business_html.count("<dt>Accept when</dt>") == 4
+routes = {"index.html": page, "business.html": business}
+for document in routes.values():
+    for dest, fragment in document.cross_refs:
+        assert dest in routes and (not fragment or fragment in routes[dest].ids), (dest, fragment)
+assert page.cross_refs.count(("business.html", "")) >= 2
+assert business.cross_refs.count(("index.html", "")) >= 2
+assert ("index.html", "teach-back-title") in business.cross_refs
+assert ("index.html", "early-access") in business.cross_refs
+assert "prefers-reduced-motion" in business_css and "focus-visible" in business_css
+for ink in ("--ink", "--muted", "--accent"):
+    fg = re.search(ink + r":#([a-f0-9]{6})", business_css).group(1)
+    for bg in ("ffffff", "f9fbff", "edf2fa"):
+        assert (luminance(bg) + .05) / (luminance(fg) + .05) >= 4.5, (ink, bg)
+print("PASS: business page includes 4 decision workflows, relative cross-page navigation, shared demo and early-access links, readable palette, and no external requests.")
 print(f"PASS: HTML nesting, {len(page.anchor_refs)} fragment references, {len(page.art)} WebP images, text-palette contrast, timed boot and reduced-motion rules, {page.external_count} public signup link(s), no client-side form or tracking.")

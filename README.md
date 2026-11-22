@@ -4,6 +4,11 @@
 
 Static public concept page for the planned Meeting Lab product. The Deck workstation has component-level runtime validation. Lima’s layout is documented and its sample release board is synthetic. The combined browser-call workflow is not presented as shipped. All five images are concept artwork, not production screenshots, and are served locally.
 
+## Page routes
+
+- `index.html` is the technical terminal and canonical location of early-access status. It contains the runnable synthetic evidence check at `index.html#teach-back-title`.
+- `business.html` is the business-facing guide to four scenario decisions, their required inputs and their evidence thresholds. It links to the terminal and uses the same early-access destination.
+
 ## Preview
 
 Run `python3 -m http.server 8080` from the repository root, then open `http://localhost:8080`. Run `python3 scripts/check_site.py` for static validation.
