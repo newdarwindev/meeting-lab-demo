@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Meeting Lab is an early-stage concept for checking live work, comparing evidence, and rehearsing handoffs without leaving the call.">
+  <meta name="theme-color" content="#101616">
+  <title>Meeting Lab — Make the handoff prove itself</title>
+  <link rel="icon" href="assets/lab.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="header wrap">
+  <a class="wordmark" href="#top"><img src="assets/lab.svg" width="30" height="30" alt=""> Meeting Lab</a>
+  <nav aria-label="Main navigation">
+    <a href="#workspaces">Workspaces</a><a href="#capabilities">Capabilities</a><a class="nav-cta" href="#early-access">Early access <span aria-hidden="true">↗</span></a>
+  </nav>
+</header>
+<main id="main">
+  <section class="hero wrap" id="top" aria-labelledby="title">
+    <div class="hero-text">
+      <p class="eyebrow"><span class="signal"></span> Early-stage product concept</p>
+      <h1 id="title">Make the handoff <em>prove itself.</em></h1>
+      <p class="lede">Don’t record another walkthrough. Ask one operator to check the system and another to reproduce the result in isolation, all from the call you’re already in.</p>
+      <div class="hero-actions"><a class="button" href="#early-access">Early access <span aria-hidden="true">↗</span></a><a class="arrow-link" href="#scenario">See the release scenario <span aria-hidden="true">↓</span></a></div>
+    </div>
+    <figure class="hero-image">
+      <img src="assets/03-release-call.webp" alt="Concept illustration of a release call comparing a deployment dashboard and a separate evidence view." width="1400" height="788" fetchpriority="high">
+      <figcaption><span>Concept 03 / 05</span> A release review with independent evidence</figcaption>
+    </figure>
+  </section>
+
+  <section class="scenario wrap" id="scenario" aria-labelledby="scenario-title">
+    <div class="section-heading"><p class="eyebrow">01 / Flagship scenario</p><h2 id="scenario-title">Ready isn’t the same as fresh.</h2><p>A green deployment badge can tell you the service is running. It doesn’t tell you whether a new event made it all the way through. Check both before you call the release done.</p></div>
+    <ol class="checks">
+      <li><span class="step">A · Release</span><h3>Read the rollout</h3><p>“Is the demo revision healthy?” Operator A checks the approved deployment view and reports the revision it sees.</p></li>
+      <li><span class="step">B · Evidence</span><h3>Find a fresh signal</h3><p>“Did the new test event arrive?” Operator B checks its own approved view for the matching fixture and timestamp.</p></li>
+      <li><span class="step">Together · Decision</span><h3>Say what’s still missing</h3><p>If the event is missing or stale, the reply says so. The operators don’t change the system or guess why the event is absent.</p></li>
+    </ol>
+    <p class="note">Illustrative workflow. The cross-check uses a shared synthetic fixture ID, not shared credentials or unrestricted desktop access.</p>
+  </section>
+
+  <section class="wrap surface" id="workspaces" aria-labelledby="workspaces-title">
+    <div class="section-heading"><p class="eyebrow">02 / Two separate environments</p><h2 id="workspaces-title">Two operators. Two views of the work.</h2><p>Each operator gets a separate, time-limited connection to a designated desktop. Seeing a second pane doesn’t grant permission to use it.</p></div>
+    <div class="workspace-grid">
+      <article class="workspace">
+        <figure><img src="assets/01-lima-workbench.webp" alt="Concept illustration of a release workspace with a deployment status dashboard." width="1400" height="788" loading="lazy"><figcaption><span>Concept 01 / 05</span> Lima workbench</figcaption></figure>
+        <div class="workspace-body"><p class="step">Operator A · Deployment workbench</p><h3>What’s been rolled out?</h3><p>Lima’s documented Ubuntu/Xfce layout has two remote work windows above two terminal panes. Our example fills one view with a synthetic release board showing application health, sync state and revision.</p></div>
+      </article>
+      <article class="workspace">
+        <figure><img src="assets/02-stean-deck-observability.webp" alt="Concept illustration of the Stean Deck workstation with a trace viewer beside a runtime status view." width="1400" height="788" loading="lazy"><figcaption><span>Concept 02 / 05</span> Stean Deck workstation</figcaption></figure>
+        <div class="workspace-body"><p class="step">Operator B · Observability workstation</p><h3>What actually happened?</h3><p>Stean Deck offers two views: traces, dashboards and usage on one side; cluster, container and job health on the other. The approved route selects the pane or test fixture the operator may use.</p></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="wrap" id="use-cases" aria-labelledby="use-cases-title">
+    <div class="section-heading"><p class="eyebrow">03 / Beyond the status check</p><h2 id="use-cases-title">Make what you can see useful.</h2></div>
+    <article class="feature-story">
+      <figure><img src="assets/04-isolated-teach-back.webp" alt="Concept illustration of two operators comparing outputs from an original procedure and an isolated synthetic rehearsal." width="1400" height="788" loading="lazy"><figcaption><span>Concept 04 / 05</span> Isolated teach-back</figcaption></figure>
+      <div><p class="step">QA &amp; onboarding</p><h3>Show it. Then rehearse it.</h3><p>One operator explains an approved workflow. The other rebuilds just one behavior in a disposable workspace with test data. Compare what both actually produce. The rehearsal doesn’t use live credentials or connect to the original system.</p></div>
+    </article>
+    <div class="teach-back" aria-labelledby="teach-back-title">
+      <div><p class="step">Try a synthetic rehearsal</p><h3 id="teach-back-title">Same green badge. Three different outcomes.</h3><p>The source says revision 42 is Ready. Open a result below to compare the replica with the expected fixture, ML-042.</p></div>
+      <div class="result-list">
+        <details name="teach-back" open><summary>Fresh</summary><p><strong>Match.</strong> The replica shows ML-042 at 14:32 UTC, after the rehearsal began. Both sides show the expected result.</p></details>
+        <details name="teach-back"><summary>Stale</summary><p><strong>Not verified.</strong> The replica shows ML-042 from 14:12 UTC, before the rehearsal. The old result does not count.</p></details>
+        <details name="teach-back"><summary>Missing</summary><p><strong>Mismatch.</strong> The replica labels ML-042 Ready but has no event timestamp. Without a timestamp, Ready incorrectly hides the lack of evidence that a new event arrived.</p></details>
+      </div>
+    </div>
+    <article class="feature-story">
+      <figure><img src="assets/05-studio-independent-feeds.webp" alt="Concept illustration of a presenter in a virtual studio with separate remote views fitted into two TVs, one blank." width="1400" height="788" loading="lazy"><figcaption><span>Concept 05 / 05</span> Studio with independent feeds</figcaption></figure>
+      <div><p class="step">Live support &amp; demos</p><h3>Show only the windows you choose.</h3><p>Put an opted-in presenter and two approved windows in one camera feed. If a window drops, only that TV goes blank. Ask what a dialog says and get a read-only translation that preserves the error code, without clicking the dialog.</p></div>
+    </article>
+  </section>
+
+  <section class="wrap" id="capabilities" aria-labelledby="capabilities-title">
+    <div class="section-heading"><p class="eyebrow">04 / Roadmap</p><h2 id="capabilities-title">What Meeting Lab is designed to do.</h2><p>These are planned capabilities, not a list of features available to customers now.</p></div>
+    <div class="capability-grid">
+      <article><span class="badge">Planned + prototype</span><h3>Operate from the meeting</h3><p>Request a bounded action in a private Google Meet or Zoom Web call. The operator checks the result and responds in that room. Out-of-scope requests do not trigger desktop input.</p></article>
+      <article><span class="badge">Planned + prototype</span><h3>Separate access by task</h3><p>Give each operator distinct, expiring access to its room, speech services and designated desktop. A wrong target, expired permission or loss of connection stops the action.</p></article>
+      <article><span class="badge">Planned + prototype</span><h3>Listen, speak and translate</h3><p>Stream English and Russian speech to text, use text replies by default, and opt into cancellable speech or a synthetic avatar’s mouth-only overlay. Translate or explain approved window crops without treating screen content as commands.</p></article>
+      <article><span class="badge">Planned + prototype</span><h3>Compose a camera scene</h3><p>Use separate available webcam assignments and fit approved windows into fixed TVs on a virtual set. Keep the other feeds running if one window disappears.</p></article>
+      <article><span class="badge">Planned + prototype</span><h3>Route models and traces privately</h3><p>Use temporary endpoints limited to approved models. Preserve authorized diagnostics without credentials or screen payloads in default trace content.</p></article>
+      <article><span class="badge">Planned</span><h3>Rehearse without copying the live system</h3><p>Reproduce an agreed result with pinned synthetic inputs and a disposable workspace. Compare outputs before calling the handoff repeatable.</p></article>
+    </div>
+    <aside class="status-panel" aria-labelledby="status-title"><h3 id="status-title">Where the evidence stops</h3><p><strong>Component checks:</strong> The Deck workstation passed its own runtime checks. Lima’s workbench layout is documented; the sample release board is synthetic. Lab tests have demonstrated camera relay, native Zoom video and local speech transcription under test conditions. <strong>Not yet proven:</strong> An end-to-end authorized operator turn and remote reply from the actual guest to its intended desktop in both browser meeting providers.</p></aside>
+  </section>
+
+  <section class="wrap" id="early-access" aria-labelledby="waitlist-title">
+    <div class="waitlist"><p class="eyebrow"><span class="signal"></span> Early access</p><h2 id="waitlist-title">What handoff would you test?</h2><p>We’re looking for teams that can bring a small, test-safe workflow and a clear way to verify the result.</p><p data-waitlist>No signup is open on this preview yet.</p></div>
+  </section>
+</main>
+<footer class="wrap footer"><span>Meeting Lab</span><span>Early-stage concept · Images are illustrative, not product screenshots.</span><span><a href="https://github.com/newdarwindev/meeting-lab-demo">Source on GitHub</a> · <a href="#top">Back to top ↑</a></span></footer>
+</body>
+</html>
