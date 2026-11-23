@@ -19,14 +19,35 @@ external analytics account is required.
    responses without login, and do not expose response summaries. Keep editor
    links, form responses and exports private. Do not post test responses to the
    live forms after the experiment starts.
-3. Run `armExperiment`. Select **Deploy → New deployment → Web app**,
+3. Leave production **unarmed**. Select **Deploy → New deployment → Web app**,
    **Execute as: Me**, **Who has access: Anyone** (not anyone with a Google
-   account). This publishes a write-only endpoint. If your organization
-   disallows anonymous web apps, stop rather than weakening its policy.
+   account). The public endpoint is write-only and ignores events while
+   unarmed. If your organization disallows anonymous web apps, stop rather
+   than weakening its policy.
 4. Give the site maintainer only the deployed HTTPS **`/exec`** URL and the three
    **responder** URLs, labeled terminal, business, and general. Never share edit
-   links, passwords, or response files. The site remains unmeasured until
-   configuration and the deployed variant paths are verified.
+   links, passwords, or response files. Keep the site’s experiment disabled
+   while checking the production responder links signed out, without submitting.
+   Keep the arm links out of public circulation until launch.
+
+## Qualify, then start the live run
+
+- Start with the [local checks](../README.md#pages-and-local-checks). For a
+  signed-out end-to-end rehearsal, use a separate disposable Apps Script
+  project, three separate forms, and that project's own anonymous `/exec`.
+  Google's `/dev` URL is editor-only, and deploying another version of the
+  same project does not isolate its script properties.
+- In that rehearsal only, verify the randomized routes and send synthetic
+  events and form submissions. Check actual changes in `reportMeetingLab`:
+  each event and completed signup must appear in the expected arm, and a
+  general-form signup must not enter either arm. The endpoint replies
+  `received` even when an event is ignored, so a response alone proves no count.
+- When the production Pages change is ready to publish, the owner runs
+  `armExperiment` immediately before the maintainer publishes the qualified
+  configuration. The first arm starts the report window; a second call
+  cannot reset counters, move the start, or undo a pause. Do not send synthetic
+  requests or submissions to production. After arming, the owner can use the
+  private report to inspect the window and counts without generating traffic.
 
 ## Read the funnel
 

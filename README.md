@@ -8,7 +8,7 @@ Static concept site. The Deck workstation has component runtime evidence. Lima�
 - `business.html`: four business decisions, their inputs and their evidence thresholds.
 - Each edition has its own `#early-access` section. No signup information is collected by this repository.
 
-Run `python3 -m http.server 8080` from the repo root and open the local root. Then run `python3 scripts/check_site.py` and `node scripts/check_experiment.cjs`. The browser simulation uses synthetic URLs and sends no network requests.
+Run `python3 -m http.server 8080` from the repo root and open the local root. Run `python3 scripts/check_site.py`, `node scripts/check_experiment.cjs`, and `node setup/test-waitlist.cjs`. These checks use synthetic inputs, not live forms or the live collector.
 
 ## A/B configuration
 
@@ -34,4 +34,4 @@ Deduplication is local to the browser page session; a new tab/session, cleared s
 
 ## GitHub Pages
 
-Under **Settings → Pages**, use **Deploy from a branch**, `main`, `/ (root)`. Keep `.nojekyll`. Relative links work under the repository’s project-page prefix; no custom Actions workflow is needed. Verify both page links and all illustrations signed out. Before enabling the test, submit synthetic cases on both responder forms and the general form, verify only the expected aggregate buckets change, and isolate/remove test responses from reporting per the owner’s instructions. Never put edit links, production form responses or credentials in this repo.
+Under **Settings → Pages**, use **Deploy from a branch**, `main`, `/ (root)`. Keep `.nojekyll`. Relative links work under the repository’s project-page prefix; no custom Actions workflow is needed. Verify both page links and all illustrations signed out. Follow the [owner rollout checklist](setup/README.md) before enabling the test. Synthetic submissions and counter checks belong in a disposable rehearsal project and forms, never in production. Never put edit links, production form responses or credentials in this repo.
