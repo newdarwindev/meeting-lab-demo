@@ -1,0 +1,9 @@
+{
+  "title": "THE TWO-SCREEN STUDIO",
+  "badge": "SIMULATED FIXTURE",
+  "frames": 48,
+  "fps": 8,
+  "transition_frame": 24,
+  "before": "BOTH FIXTURE FEEDS ACTIVE",
+  "after": "A CLOSED / B KEEPS MOVING"
+}
