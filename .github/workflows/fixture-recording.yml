@@ -1,0 +1,68 @@
+name: Offline fixture recording and site build
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "marketing-fixture/**"
+      - ".github/workflows/fixture-recording.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  recording-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    outputs:
+      artifact: ${{ steps.identity.outputs.artifact }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Bind artifact name to this run and commit
+        id: identity
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          printf 'artifact=meeting-fixture-%s-%s-%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
+      - name: Verify pixel evidence and create recording
+        run: |
+          python3 -I marketing-fixture/release_gate.py capture --commit "$GITHUB_SHA" --bundle "$RUNNER_TEMP/fixture-media"
+          python3 -I marketing-fixture/test_release_gate.py --bundle "$RUNNER_TEMP/fixture-media" --commit "$GITHUB_SHA"
+      - name: Store verified recording for the site builder
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ${{ steps.identity.outputs.artifact }}
+          path: ${{ runner.temp }}/fixture-media/
+          if-no-files-found: error
+          retention-days: 14
+
+  website-build:
+    needs: recording-gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Download only the same-run verified recording
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ${{ needs.recording-gate.outputs.artifact }}
+          path: ${{ runner.temp }}/fixture-media
+      - name: Independently verify and assemble both editions
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          python3 -I marketing-fixture/release_gate.py build --commit "$GITHUB_SHA" --bundle "$RUNNER_TEMP/fixture-media" --out "$RUNNER_TEMP/site"
+      - name: Store site package for protected review
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: meeting-fixture-site-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          # Explicit hidden file list: the generated Pages root uses .nojekyll.
+          include-hidden-files: true
+          path: ${{ runner.temp }}/site/
+          if-no-files-found: error
+          retention-days: 14
